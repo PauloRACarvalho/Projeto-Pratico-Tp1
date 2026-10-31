@@ -1,5 +1,9 @@
 package Administracao;
 
+import Tratamento_de_Excessoes.ValidarEmailException;
+import Tratamento_de_Excessoes.ValidarSenhaTipo1Exception;
+import Tratamento_de_Excessoes.ValidarSenhaTipo2Exception;
+
 import Pesquisas.Pesquisa;
 import Pesquisas.SituacaoPesquisa;
 import Pesquisas.TipoPesquisa;
@@ -17,9 +21,14 @@ public class Pesquisador extends Usuario {
 
     // Construtor
     public Pesquisador(String nome, String email, String senha,
-                       String perfil, String status, String abrangencia) {
-        super(nome, email, senha, perfil, status);
-        this.abrangencia = abrangencia;
+                       String perfil) throws ValidarEmailException, ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception{
+        super(nome, email, senha, perfil);
+
+    }
+
+    @Override
+    public String toString() {
+        return "nome: " + nome + " email: " + email + " perfil: " + perfil;
     }
 
     // 🔑 MÉTODOS COM LÓGICA REAL
