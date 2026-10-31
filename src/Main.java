@@ -12,6 +12,7 @@ public class Main {
         GerenciarUsuarios gerenciarUsuarios = new GerenciarUsuarios();
         boolean isExecutando = true;
         int menu;
+        Usuario logado = null;
 
         while(isExecutando) {
             //menu
@@ -25,55 +26,105 @@ public class Main {
             entrada.nextLine();
 
             if(menu == 1) {
-                try {
-                    System.out.println("CADASTRAR NOVO USUÁRIO");
-                    System.out.println("Digite seu nome");
-                    String nome = entrada.nextLine();
-
-                    System.out.println("Administrador/Analista/Pesquisador?");
-                    String perfil = entrada.nextLine();
-
-                    System.out.println("Digite seu email:");
-                    String email = entrada.nextLine();
-                    Usuario.validarEmail(email);
-
-                    System.out.println("Digite sua senha:");
-                    String senha = entrada.nextLine();
-                    Usuario.validarSenha(senha);
-
-                    Usuario usuario;
-                    if ("Administrador".equals(perfil)) {
-                        usuario = new Administrador(nome, email, senha, perfil);
-                    } else if ("Analista".equals(perfil)) {
-                        usuario = new Analista(nome, email, senha, perfil);
-                    } else if ("Pesquisador".equals(perfil)) {
-                        usuario = new Pesquisador(nome, email, senha, perfil);
-                    }else {
-                        System.out.println("Erro: perfil inválido.");
-                        return;
-                    }
-
-                    gerenciarUsuarios.adicionarUsuario(usuario);
-
-                    System.out.println(usuario);
-
-                } catch (ValidarEmailException | ValidarSenhaTipo1Exception | ValidarSenhaTipo2Exception excessao) {
-                    System.out.println("Erro: " + excessao.getMessage());
-                }
+                cadastrarUsuario(entrada, gerenciarUsuarios);
             } else if(menu == 2) {
-                System.out.println("Digite seu email:");
-                String email = entrada.nextLine();
+                logado = fazerLogin(entrada, gerenciarUsuarios);
+            } else if (menu == 3) {
+                if(logado != null) {
+                    System.out.println("Logout realizado. Até logo!");
+                    logado = null;
+                }
 
-
-                System.out.println("Digite sua senha");
-                String senha = entrada.nextLine();
-
-
-
+                isExecutando = false;
+            } else {
+                System.out.println("Opção inválida!");
             }
 
         }
 
+        entrada.close();
+
+
+    }
+
+    public static void cadastrarUsuario(Scanner entrada, GerenciarUsuarios gerenciarUsuarios) {
+        System.out.println("CADASTRAR NOVO USUÁRIO");
+        System.out.println("Digite seu nome");
+        String nome = entrada.nextLine();
+
+        String perfil;
+        while(true) {
+            System.out.println("Administrador/Analista/Pesquisador?");
+            perfil = entrada.nextLine().trim();
+            if ("Administrador".equalsIgnoreCase(perfil) || "Analista".equalsIgnoreCase(perfil) || "Pesquisador".equalsIgnoreCase(perfil)) {
+                break;
+            }
+            System.out.println("Erro: perfil inválido. Tente novamente.");
+        }
+
+        String email;
+        while(true) {
+            System.out.println("Digite seu email:");
+            email = entrada.nextLine();
+
+            try {
+                Usuario.validarEmail(email);
+                break;
+            } catch (ValidarEmailException e) {
+                System.out.println("Erro: "+ e.getMessage());
+            }
+
+        }
+
+        String senha;
+        while(true) {
+            System.out.println("Digite sua senha:");
+            senha = entrada.nextLine();
+
+            try {
+                Usuario.validarSenha(senha);
+                break;
+            } catch(ValidarSenhaTipo1Exception | ValidarSenhaTipo2Exception e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
+        }
+
+
+        Usuario usuario;
+        try {
+            if ("Administrador".equals(perfil)) {
+                usuario = new Administrador(nome, email, senha, perfil);
+            } else if ("Analista".equals(perfil)) {
+                usuario = new Analista(nome, email, senha, perfil);
+            } else {
+                usuario = new Pesquisador(nome, email, senha, perfil);
+            }
+        } catch (ValidarEmailException | ValidarSenhaTipo1Exception | ValidarSenhaTipo2Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+            return;
+        }
+
+        gerenciarUsuarios.adicionarUsuario(usuario);
+
+
+    }
+
+    public static Usuario fazerLogin(Scanner entrada, GerenciarUsuarios gerenciarUsuarios) {
+        System.out.println("Digite seu email:");
+        String email = entrada.nextLine().trim();
+        System.out.println("Digite sua senha:");
+        String senha = entrada.nextLine();
+
+        Usuario usuario = gerenciarUsuarios.login(email,senha);
+        if(usuario != null) {
+            System.out.println("Bem vindo, " + usuario.getNome()+ "!");
+        } else {
+            System.out.println("Email ou senha incorretos.");
+        }
+
+        return usuario;
 
     }
 }
+
+

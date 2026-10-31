@@ -1,0 +1,4 @@
+Anna Clara;annaclara1813@gmail.com;@4Nn4624622;Administrador
+julia;julia@gmail.com;4N@56;Analista
+eric;eric@gmail.com;Eric#123;Analista
+beatriz;beatriz@gmail.com;Beatriz@123;analista
