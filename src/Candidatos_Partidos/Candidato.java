@@ -1,12 +1,12 @@
 package Candidatos_Partidos;
 
-public class Candidatos {
+public class Candidato {
     private String nome;
     private int numero;
     private String cargo;
     private String situacao;
 
-    public Candidatos(String nome, int numero, String cargo, String situacao){
+    public Candidato(String nome, int numero, String cargo, String situacao){
         this.nome = nome;
         this.numero = numero;
         this.cargo = cargo;
