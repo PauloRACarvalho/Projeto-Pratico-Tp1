@@ -43,6 +43,11 @@ public class Pesquisa {
         // A exclusão REAL será feita pelo Pesquisador
     }
 
+    //cadastrar perguntas
+    public void adicionarPergunta(Pergunta pergunta) {
+        this.perguntas.add(pergunta);
+    }
+
     // Getters e Setters
     public String getCodigo() { return codigo; }
     public void setCodigo(String codigo) { this.codigo = codigo; }

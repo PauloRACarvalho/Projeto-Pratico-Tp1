@@ -2,9 +2,19 @@ import Administracao.Administrador;
 import Administracao.Analista;
 import Administracao.Pesquisador;
 import Administracao.Usuario;
+import Administracao.GerenciarUsuarios;
 import java.util.Scanner;
 import Tratamento_de_Excessoes.*;
-import Administracao.GerenciarUsuarios;
+
+import Pesquisas.Pesquisa;
+import Pesquisas.Pergunta;
+import Pesquisas.OpcaoResposta;
+import Entrevista.Entrevista;
+import Entrevista.Entrevistado;
+import Entrevista.Entrevistador;
+import Entrevista.Resposta;
+import Pesquisas.Estatistica;
+import Pesquisas.SituacaoPesquisa;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,75 +22,110 @@ public class Main {
         GerenciarUsuarios gerenciarUsuarios = new GerenciarUsuarios();
         boolean isExecutando = true;
         int menu;
+
         Usuario logado = null;
+        Pesquisa pesquisaAtual = null;
 
+        System.out.println("========================================");
+        System.out.println("  SISTEMA DE PESQUISA ELEITORAL 2026");
+        System.out.println("========================================");
+
+        // Loop principal do sistema
         while(isExecutando) {
-            //menu
-            System.out.println("Escolha a opção desejada:");
-            System.out.println("1 - Cadastro");
-            System.out.println("2 - Login");
-            System.out.println("3 - Logout");
+            System.out.println("\n----------------------------------------");
 
-            //usuario escolhe
-            menu = entrada.nextInt();
-            entrada.nextLine();
-
-            if(menu == 1) {
-                cadastrarUsuario(entrada, gerenciarUsuarios);
-            } else if(menu == 2) {
-                logado = fazerLogin(entrada, gerenciarUsuarios);
-            } else if (menu == 3) {
-                if(logado != null) {
-                    System.out.println("Logout realizado. Até logo!");
-                    logado = null;
-                }
-
-                isExecutando = false;
+            // Exibe menu diferente se estiver logado ou não
+            if (logado == null) {
+                System.out.println("--- MENU INICIAL ---");
+                System.out.println("1 - Cadastro");
+                System.out.println("2 - Login");
+                System.out.println("3 - Sair do Sistema");
             } else {
-                System.out.println("Opção inválida!");
+                System.out.println("--- MENU DO USUARIO: " + logado.getNome() + " ---");
+                System.out.println("1 - Criar Nova Pesquisa");
+                System.out.println("2 - Realizar Entrevista");
+                System.out.println("3 - Gerar Relatorio Estatistico");
+                System.out.println("4 - Logout (Voltar ao Menu Inicial)");
             }
+            System.out.print("Escolha a opcao desejada: ");
 
+            menu = entrada.nextInt();
+            entrada.nextLine(); // Limpar buffer do scanner
+
+            // Menu para usuário não logado
+            if (logado == null) {
+                if(menu == 1) {
+                    cadastrarUsuario(entrada, gerenciarUsuarios);
+                } else if(menu == 2) {
+                    logado = fazerLogin(entrada, gerenciarUsuarios);
+                } else if (menu == 3) {
+                    System.out.println("Saindo do sistema. Ate logo!");
+                    isExecutando = false;
+                } else {
+                    System.out.println("Opcao invalida!");
+                }
+            } else {
+                // Menu para usuário logado
+                if(menu == 1) {
+                    // Verifica se é Pesquisador antes de criar pesquisa
+                    if (logado instanceof Pesquisador) {
+                        pesquisaAtual = criarPesquisa(entrada, (Pesquisador) logado);
+                    } else {
+                        System.out.println("Apenas usuarios com perfil 'Pesquisador' podem criar pesquisas.");
+                    }
+                } else if(menu == 2) {
+                    realizarEntrevista(entrada, pesquisaAtual, logado);
+                } else if(menu == 3) {
+                    gerarRelatorio(pesquisaAtual);
+                } else if(menu == 4) {
+                    System.out.println("Logout realizado com sucesso.");
+                    logado = null;
+                    pesquisaAtual = null;
+                } else {
+                    System.out.println("Opcao invalida!");
+                }
+            }
         }
-
         entrada.close();
-
-
     }
 
+    // Realiza o cadastro de novo usuário com validações
     public static void cadastrarUsuario(Scanner entrada, GerenciarUsuarios gerenciarUsuarios) {
-        System.out.println("CADASTRAR NOVO USUÁRIO");
-        System.out.println("Digite seu nome");
+        System.out.println("\n--- CADASTRAR NOVO USUARIO ---");
+        System.out.print("Digite seu nome: ");
         String nome = entrada.nextLine();
 
+        // Valida o perfil do usuário
         String perfil;
         while(true) {
-            System.out.println("Administrador/Analista/Pesquisador?");
+            System.out.print("Perfil (Administrador/Analista/Pesquisador): ");
             perfil = entrada.nextLine().trim();
-            if ("Administrador".equalsIgnoreCase(perfil) || "Analista".equalsIgnoreCase(perfil) || "Pesquisador".equalsIgnoreCase(perfil)) {
+            if ("Administrador".equalsIgnoreCase(perfil) ||
+                    "Analista".equalsIgnoreCase(perfil) ||
+                    "Pesquisador".equalsIgnoreCase(perfil)) {
                 break;
             }
-            System.out.println("Erro: perfil inválido. Tente novamente.");
+            System.out.println("Erro: perfil invalido. Tente novamente.");
         }
 
+        // Valida o email com verificação de formato
         String email;
         while(true) {
-            System.out.println("Digite seu email:");
+            System.out.print("Digite seu email (ex: user@gmail.com): ");
             email = entrada.nextLine();
-
             try {
                 Usuario.validarEmail(email);
                 break;
             } catch (ValidarEmailException e) {
-                System.out.println("Erro: "+ e.getMessage());
+                System.out.println("Erro: " + e.getMessage());
             }
-
         }
 
+        // Valida a senha com regras de segurança
         String senha;
         while(true) {
-            System.out.println("Digite sua senha:");
+            System.out.print("Digite sua senha (maiúscula + caractere especial): ");
             senha = entrada.nextLine();
-
             try {
                 Usuario.validarSenha(senha);
                 break;
@@ -89,42 +134,97 @@ public class Main {
             }
         }
 
-
-        Usuario usuario;
+        // Cria o objeto usuário conforme o perfil
         try {
-            if ("Administrador".equals(perfil)) {
+            Usuario usuario;
+            if ("Administrador".equalsIgnoreCase(perfil)) {
                 usuario = new Administrador(nome, email, senha, perfil);
-            } else if ("Analista".equals(perfil)) {
+            } else if ("Analista".equalsIgnoreCase(perfil)) {
                 usuario = new Analista(nome, email, senha, perfil);
             } else {
                 usuario = new Pesquisador(nome, email, senha, perfil);
             }
-        } catch (ValidarEmailException | ValidarSenhaTipo1Exception | ValidarSenhaTipo2Exception e) {
-            System.out.println("Erro: " + e.getMessage());
-            return;
+            gerenciarUsuarios.adicionarUsuario(usuario);
+        } catch (Exception e) {
+            System.out.println("Erro ao criar usuario: " + e.getMessage());
         }
-
-        gerenciarUsuarios.adicionarUsuario(usuario);
-
-
     }
 
+    // Realiza o login verificando email e senha
     public static Usuario fazerLogin(Scanner entrada, GerenciarUsuarios gerenciarUsuarios) {
-        System.out.println("Digite seu email:");
+        System.out.println("\n--- LOGIN ---");
+        System.out.print("Digite seu email: ");
         String email = entrada.nextLine().trim();
-        System.out.println("Digite sua senha:");
+        System.out.print("Digite sua senha: ");
         String senha = entrada.nextLine();
 
-        Usuario usuario = gerenciarUsuarios.login(email,senha);
+        Usuario usuario = gerenciarUsuarios.login(email, senha);
         if(usuario != null) {
-            System.out.println("Bem vindo, " + usuario.getNome()+ "!");
+            System.out.println("Bem-vindo, " + usuario.getNome() + "!");
         } else {
             System.out.println("Email ou senha incorretos.");
         }
-
         return usuario;
+    }
 
+    // Cria nova pesquisa com pergunta e opções padrão
+    public static Pesquisa criarPesquisa(Scanner entrada, Pesquisador pesquisador) {
+        System.out.println("\n--- CRIAR NOVA PESQUISA ---");
+        System.out.print("Codigo da Pesquisa (ex: PESQ-01): ");
+        String codigo = entrada.nextLine();
+        System.out.print("Cargo disputado (ex: Prefeito): ");
+        String cargo = entrada.nextLine();
+
+        Pesquisa novaPesquisa = new Pesquisa(codigo, cargo, "Nov/2026", 1000, "Quantitativa");
+        novaPesquisa.setSituacao(new SituacaoPesquisa(1, "Em Andamento"));
+
+        // Cria pergunta padrão sobre intenção de voto
+        Pergunta p1 = new Pergunta(1, "Em qual candidato você votaria?");
+        p1.adicionarOpcao(new OpcaoResposta(1, "Candidato A"));
+        p1.adicionarOpcao(new OpcaoResposta(2, "Candidato B"));
+        p1.adicionarOpcao(new OpcaoResposta(3, "Nulo/Branco"));
+
+        novaPesquisa.adicionarPergunta(p1);
+        System.out.println("Pesquisa '" + codigo + "' criada com sucesso pelo pesquisador " + pesquisador.getNome() + "!");
+        return novaPesquisa;
+    }
+
+    // Realiza entrevista simulando resposta de um cidadão
+    public static void realizarEntrevista(Scanner entrada, Pesquisa pesquisa, Usuario logado) {
+        if (pesquisa == null) {
+            System.out.println("Aviso: Crie uma pesquisa primeiro (Opcao 1 do menu).");
+            return;
+        }
+
+        System.out.println("\n--- REALIZAR ENTREVISTA ---");
+        System.out.print("Idade do entrevistado: ");
+        int idade = entrada.nextInt();
+        entrada.nextLine(); // Limpar buffer
+        System.out.print("Classe Social (A, B, C, D): ");
+        String classe = entrada.nextLine();
+
+        Entrevistado entrevistado = new Entrevistado(999, idade, "Ensino Medio", "Indefinido", classe);
+        Entrevista novaEntrevista = new Entrevista(1001, "Concluida");
+
+        Entrevistador entrevistador = new Entrevistador(1, logado.getNome());
+        novaEntrevista.setEntrevistado(entrevistado);
+        novaEntrevista.setEntrevistador(entrevistador);
+
+        // Simula resposta do cidadão (opção 1)
+        Resposta resp = new Resposta(5001, "1");
+        novaEntrevista.adicionarResposta(resp);
+
+        System.out.println("Entrevista registrada com sucesso para cidadão da Classe " + classe + "!");
+    }
+
+    // Gera relatório estatístico da pesquisa
+    public static void gerarRelatorio(Pesquisa pesquisa) {
+        if (pesquisa == null) {
+            System.out.println("Aviso: Nenhuma pesquisa criada para gerar relatorio.");
+            return;
+        }
+        System.out.println("\n--- GERANDO RELATORIO ---");
+        Estatistica estatistica = new Estatistica(pesquisa);
+        estatistica.getRelatorio();
     }
 }
-
-

@@ -1,7 +1,5 @@
 package Pesquisas;
 
-import java.util.List;
-
 public class Estatistica {
     // Atributos (nenhum explícito no diagrama, mas vamos precisar)
     private Pesquisa pesquisaReferencia;
