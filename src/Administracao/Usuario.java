@@ -2,11 +2,12 @@ package Administracao;
 import Tratamento_de_Excessoes.ValidarEmailException;
 import Tratamento_de_Excessoes.ValidarSenhaTipo1Exception;
 import Tratamento_de_Excessoes.ValidarSenhaTipo2Exception;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Usuario {
+    public static final String ATIVO = "Ativo";
+    public static final String DESATIVADO = "Desativado";
+
     protected String nome;
     protected String email;
     protected String senha;
@@ -24,6 +25,7 @@ public class Usuario {
 
         this.email = email;
         this.senha = senha;
+        this.status = ATIVO; // todo usuario novo comeca ativo
 
     }
 
@@ -37,7 +39,7 @@ public class Usuario {
     public static void validarSenha(String senha) throws ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception{
         //metodo .matches() é uma biblioteca regex, vamos usar para verificar letras maiuscula e caracteres especiais
         if (senha == null || senha.isEmpty()){
-           throw new ValidarSenhaTipo1Exception("O campo 'senha' precisa estar preenchido."); //erro do tipo 1: senha está vazia
+            throw new ValidarSenhaTipo1Exception("O campo 'senha' precisa estar preenchido."); //erro do tipo 1: senha está vazia
 
         }
         boolean temMaiuscula = senha.matches(".*[A-Z].*");
@@ -50,18 +52,17 @@ public class Usuario {
 
     }
 
+    public void ativar(){
+        this.status = ATIVO;
+    }
 
+    public void desativar(){
+        this.status = DESATIVADO;
+    }
 
-
-//    public void ativar(){
-//        this.status = "Ativo";
-//        System.out.println("Usuário " + nome + " ativado.");
-//    }
-//
-//    public void desativar(){
-//        this.status = "Desativado";
-//        System.out.println("Usuario " + nome + " desativado.");
-//    }
+    public boolean isAtivo(){
+        return ATIVO.equalsIgnoreCase(status);
+    }
 
     //Get e Set
     public String getNome() {
@@ -94,12 +95,15 @@ public class Usuario {
 
     public void setEmail(String email) throws ValidarEmailException {
         validarEmail(email);
+        this.email = email;
     }
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
     }
 
-    public void setSenha(String senha) throws ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception {validarSenha(senha);
+    public void setSenha(String senha) throws ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception {
+        validarSenha(senha);
+        this.senha = senha;
     }
 }

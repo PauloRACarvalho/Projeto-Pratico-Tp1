@@ -34,7 +34,7 @@ public class Main {
         while(isExecutando) {
             System.out.println("\n----------------------------------------");
 
-            // Exibe menu diferente se estiver logado ou não
+            // Exibe menu diferente conforme o usuario esteja logado e seu perfil
             if (logado == null) {
                 System.out.println("--- MENU INICIAL ---");
                 System.out.println("1 - Cadastro");
@@ -42,10 +42,24 @@ public class Main {
                 System.out.println("3 - Sair do Sistema");
             } else {
                 System.out.println("--- MENU DO USUARIO: " + logado.getNome() + " ---");
-                System.out.println("1 - Criar Nova Pesquisa");
-                System.out.println("2 - Realizar Entrevista");
-                System.out.println("3 - Gerar Relatorio Estatistico");
-                System.out.println("4 - Logout (Voltar ao Menu Inicial)");
+                if (logado instanceof Administrador) {
+                    System.out.println("1 - Criar Nova Pesquisa");
+                    System.out.println("2 - Realizar Entrevista");
+                    System.out.println("3 - Gerar Relatorio Estatistico");
+                    System.out.println("4 - Cadastrar Usuario");
+                    System.out.println("5 - Listar Usuarios");
+                    System.out.println("6 - Ativar/Desativar Usuario");
+                    System.out.println("7 - Logout (Voltar ao Menu Inicial)");
+                } else if (logado instanceof Pesquisador) {
+                    System.out.println("1 - Criar Nova Pesquisa");
+                    System.out.println("2 - Realizar Entrevista");
+                    System.out.println("3 - Gerar Relatorio Estatistico");
+                    System.out.println("4 - Logout (Voltar ao Menu Inicial)");
+                } else {
+                    // Analista: apenas estatisticas
+                    System.out.println("1 - Gerar Relatorio Estatistico");
+                    System.out.println("2 - Logout (Voltar ao Menu Inicial)");
+                }
             }
             System.out.print("Escolha a opcao desejada: ");
 
@@ -64,23 +78,48 @@ public class Main {
                 } else {
                     System.out.println("Opcao invalida!");
                 }
-            } else {
-                // Menu para usuário logado
-                if(menu == 1) {
-                    // Verifica se é Pesquisador antes de criar pesquisa
-                    if (logado instanceof Pesquisador) {
-                        pesquisaAtual = criarPesquisa(entrada, (Pesquisador) logado);
-                    } else {
-                        System.out.println("Apenas usuarios com perfil 'Pesquisador' podem criar pesquisas.");
-                    }
-                } else if(menu == 2) {
+            } else if (logado instanceof Administrador) {
+                // Administrador: pesquisa + gestao de usuarios
+                if (menu == 1) {
+                    pesquisaAtual = criarPesquisa(entrada, logado);
+                } else if (menu == 2) {
                     realizarEntrevista(entrada, pesquisaAtual, logado);
-                } else if(menu == 3) {
+                } else if (menu == 3) {
                     gerarRelatorio(pesquisaAtual);
-                } else if(menu == 4) {
+                } else if (menu == 4) {
+                    cadastrarUsuario(entrada, gerenciarUsuarios);
+                } else if (menu == 5) {
+                    System.out.println("\n--- USUARIOS CADASTRADOS ---");
+                    gerenciarUsuarios.listarUsuarios();
+                } else if (menu == 6) {
+                    alterarStatusUsuario(entrada, gerenciarUsuarios, logado);
+                } else if (menu == 7) {
                     System.out.println("Logout realizado com sucesso.");
                     logado = null;
-                    pesquisaAtual = null;
+                } else {
+                    System.out.println("Opcao invalida!");
+                }
+            } else if (logado instanceof Pesquisador) {
+                // Pesquisador
+                if (menu == 1) {
+                    pesquisaAtual = criarPesquisa(entrada, logado);
+                } else if (menu == 2) {
+                    realizarEntrevista(entrada, pesquisaAtual, logado);
+                } else if (menu == 3) {
+                    gerarRelatorio(pesquisaAtual);
+                } else if (menu == 4) {
+                    System.out.println("Logout realizado com sucesso.");
+                    logado = null;
+                } else {
+                    System.out.println("Opcao invalida!");
+                }
+            } else {
+                // Analista
+                if (menu == 1) {
+                    gerarRelatorio(pesquisaAtual);
+                } else if (menu == 2) {
+                    System.out.println("Logout realizado com sucesso.");
+                    logado = null;
                 } else {
                     System.out.println("Opcao invalida!");
                 }
@@ -150,7 +189,7 @@ public class Main {
         }
     }
 
-    // Realiza o login verificando email e senha
+    // Realiza o login verificando email, senha e se o usuario esta ativo
     public static Usuario fazerLogin(Scanner entrada, GerenciarUsuarios gerenciarUsuarios) {
         System.out.println("\n--- LOGIN ---");
         System.out.print("Digite seu email: ");
@@ -159,16 +198,55 @@ public class Main {
         String senha = entrada.nextLine();
 
         Usuario usuario = gerenciarUsuarios.login(email, senha);
-        if(usuario != null) {
-            System.out.println("Bem-vindo, " + usuario.getNome() + "!");
-        } else {
+        if (usuario == null) {
             System.out.println("Email ou senha incorretos.");
+            return null;
         }
+        if (!usuario.isAtivo()) {
+            System.out.println("Usuario desativado. Procure um administrador.");
+            return null;
+        }
+        System.out.println("Bem-vindo, " + usuario.getNome() + "!");
         return usuario;
     }
 
+    // Administrador ativa ou desativa um usuario pelo email
+    public static void alterarStatusUsuario(Scanner entrada, GerenciarUsuarios gerenciarUsuarios, Usuario logado) {
+        System.out.println("\n--- ATIVAR/DESATIVAR USUARIO ---");
+        gerenciarUsuarios.listarUsuarios();
+        System.out.print("\nEmail do usuario: ");
+        String email = entrada.nextLine().trim();
+
+        Usuario alvo = gerenciarUsuarios.buscarPorEmail(email);
+        if (alvo == null) {
+            System.out.println("Usuario nao encontrado.");
+            return;
+        }
+
+        System.out.println("1 - Ativar");
+        System.out.println("2 - Desativar");
+        System.out.print("Escolha: ");
+        int opcao = entrada.nextInt();
+        entrada.nextLine(); // Limpar buffer
+
+        if (opcao == 1) {
+            gerenciarUsuarios.alterarStatus(email, true);
+            System.out.println("Usuario " + alvo.getNome() + " ativado.");
+        } else if (opcao == 2) {
+            // Impede o administrador de desativar a si mesmo
+            if (alvo.getEmail().equalsIgnoreCase(logado.getEmail())) {
+                System.out.println("Voce nao pode desativar a propria conta.");
+                return;
+            }
+            gerenciarUsuarios.alterarStatus(email, false);
+            System.out.println("Usuario " + alvo.getNome() + " desativado.");
+        } else {
+            System.out.println("Opcao invalida!");
+        }
+    }
+
     // Cria nova pesquisa com pergunta e opções padrão
-    public static Pesquisa criarPesquisa(Scanner entrada, Pesquisador pesquisador) {
+    public static Pesquisa criarPesquisa(Scanner entrada, Usuario criador) {
         System.out.println("\n--- CRIAR NOVA PESQUISA ---");
         System.out.print("Codigo da Pesquisa (ex: PESQ-01): ");
         String codigo = entrada.nextLine();
@@ -185,7 +263,7 @@ public class Main {
         p1.adicionarOpcao(new OpcaoResposta(3, "Nulo/Branco"));
 
         novaPesquisa.adicionarPergunta(p1);
-        System.out.println("Pesquisa '" + codigo + "' criada com sucesso pelo pesquisador " + pesquisador.getNome() + "!");
+        System.out.println("Pesquisa '" + codigo + "' criada com sucesso por " + criador.getNome() + "!");
         return novaPesquisa;
     }
 
