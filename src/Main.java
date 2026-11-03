@@ -6,8 +6,11 @@ import java.util.Scanner;
 import Tratamento_de_Excessoes.*;
 import Administracao.GerenciarUsuarios;
 
+
 public class Main {
     public static void main(String[] args) {
+
+
         Scanner entrada = new Scanner(System.in);
         GerenciarUsuarios gerenciarUsuarios = new GerenciarUsuarios();
         boolean isExecutando = true;
