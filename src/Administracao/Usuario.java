@@ -15,7 +15,6 @@ public class Usuario {
     protected String status;
 
 
-    //construtor
     public Usuario(String nome, String email, String senha, String perfil) throws ValidarEmailException, ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception{
         this.nome = nome;
         this.perfil = perfil;
@@ -25,7 +24,7 @@ public class Usuario {
 
         this.email = email;
         this.senha = senha;
-        this.status = ATIVO; // todo usuario novo comeca ativo
+        this.status = ATIVO;
 
     }
 
@@ -37,7 +36,7 @@ public class Usuario {
     }
 
     public static void validarSenha(String senha) throws ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception{
-        //metodo .matches() é uma biblioteca regex, vamos usar para verificar letras maiuscula e caracteres especiais
+        //verificar letras maiuscula e caracteres especiais com regex
         if (senha == null || senha.isEmpty()){
             throw new ValidarSenhaTipo1Exception("O campo 'senha' precisa estar preenchido."); //erro do tipo 1: senha está vazia
 

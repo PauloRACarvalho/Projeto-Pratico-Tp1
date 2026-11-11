@@ -44,7 +44,7 @@ public class GerenciarUsuarios {
         return null;
     }
 
-    // Busca um usuario pelo email (retorna null se nao existir)
+    // Busca um usuario pelo email
     public Usuario buscarPorEmail(String email) {
         for (Usuario u : usuarioList) {
             if (u.getEmail().equalsIgnoreCase(email)) {
@@ -66,7 +66,7 @@ public class GerenciarUsuarios {
         }
     }
 
-    // Ativa ou desativa um usuario pelo email. Retorna false se nao encontrar.
+    // Ativa ou desativa um usuario pelo email
     public boolean alterarStatus(String email, boolean ativar) {
         Usuario u = buscarPorEmail(email);
         if (u == null) {

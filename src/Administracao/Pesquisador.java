@@ -16,10 +16,9 @@ public class Pesquisador extends Usuario {
     private SituacaoPesquisa situacao;
     private TipoPesquisa tipo;
 
-    // 🔑 LISTA DE PESQUISAS (o "banco de dados" do pesquisador)
+    // Lista de pesquisa
     private List<Pesquisa> minhasPesquisas = new ArrayList<>();
 
-    // Construtor
     public Pesquisador(String nome, String email, String senha,
                        String perfil) throws ValidarEmailException, ValidarSenhaTipo1Exception, ValidarSenhaTipo2Exception{
         super(nome, email, senha, perfil);
@@ -31,27 +30,22 @@ public class Pesquisador extends Usuario {
         return "nome: " + nome + " email: " + email + " perfil: " + perfil;
     }
 
-    // 🔑 MÉTODOS COM LÓGICA REAL
-
     public void cadastrarPesquisa(Pesquisa pesquisa) {
-        // Validação
         if (pesquisa.getCodigo() == null || pesquisa.getCodigo().isEmpty()) {
             System.out.println("ERRO: Pesquisa sem código!");
             return;
         }
 
-        // Adiciona na lista REAL
+        // Adiciona na lista
         this.minhasPesquisas.add(pesquisa);
         System.out.println("SUCESSO: Pesquisa " + pesquisa.getCodigo() +
                 " cadastrada pelo pesquisador " + getNome());
     }
 
     public void editarPesquisa(Pesquisa pesquisaNova, Pesquisa pesquisaAntiga) {
-        // Procura a pesquisa antiga na lista
         int indice = this.minhasPesquisas.indexOf(pesquisaAntiga);
 
         if (indice != -1) {
-            // Substitui pela nova
             this.minhasPesquisas.set(indice, pesquisaNova);
             System.out.println("SUCESSO: Pesquisa " + pesquisaAntiga.getCodigo() +
                     " substituída por " + pesquisaNova.getCodigo());
@@ -61,7 +55,7 @@ public class Pesquisador extends Usuario {
     }
 
     public void ExcluirPesquisa(Pesquisa pesquisa) {
-        // Remove da lista REAL
+        // Remove da lista
         boolean removido = this.minhasPesquisas.remove(pesquisa);
 
         if (removido) {
@@ -108,10 +102,10 @@ public class Pesquisador extends Usuario {
 
     public void processarPesquisa() {
         System.out.println("Processando pesquisas...");
-        // Lógica de processamento
+
     }
 
-    // Getters e Setters
+    // Get e Set
     public String getAbrangencia() { return abrangencia; }
     public void setAbrangencia(String abrangencia) {
         this.abrangencia = abrangencia;
