@@ -122,14 +122,12 @@ Os usuários cadastrados são gravados no arquivo `usuarios.txt`, criado automat
 - A persistência em arquivo abrange, por ora, apenas os usuários. Pesquisas e entrevistas ficam em memória durante a execução.
 - A coleta de entrevistas é simulada.
 - As senhas são gravadas em texto puro no arquivo.
-- A interface é de console, e a interface gráfica será entregue na Etapa 4.
+- A interface é de console, e a interface gráfica será entregue na Etapa 4, etapa final do projeto.
 
 ## Próximos passos
-
-- Finalizar a interface gráfica para a comunicação com o código.
-- Apresentação final do projeto
-- Finalizar o relatório do projeto
 
 - Implementar a interface gráfica e conectar os eventos à lógica de negócio (Etapa 4).
 - Ampliar a persistência para pesquisas, entrevistas, candidatos e partidos.
 - Evoluir o módulo de análise estatística, com comparações entre pesquisas, gráficos e exportação de relatórios.
+- Finalizar o relatório do projeto
+- Apresentação final
