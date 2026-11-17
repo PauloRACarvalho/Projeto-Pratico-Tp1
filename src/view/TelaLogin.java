@@ -8,6 +8,10 @@ import Tratamento_de_Excessoes.*;
 import javax.swing.JOptionPane;
 import Administracao.GerenciarUsuarios;
 import view.TelaCadastro;
+import Administracao.Analista;
+import Pesquisas.Pesquisa;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,9 +25,15 @@ public class TelaLogin extends javax.swing.JFrame {
      * Creates new form TelaLogin
      */
     private GerenciarUsuarios gerenciarUsuarios;
+    private List<Pesquisa> pesquisas;
 
     public TelaLogin(GerenciarUsuarios gerenciarUsuarios) {
+        this(gerenciarUsuarios, new ArrayList<Pesquisa>());
+    }
+
+    public TelaLogin(GerenciarUsuarios gerenciarUsuarios, List<Pesquisa> pesquisas) {
         this.gerenciarUsuarios = gerenciarUsuarios;
+        this.pesquisas = pesquisas == null ? new ArrayList<Pesquisa>() : pesquisas;
         initComponents();
         
         txtCadastro.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
@@ -236,6 +246,11 @@ public class TelaLogin extends javax.swing.JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuario.getNome() + "!");
+        if (usuario instanceof Analista) {
+            TelaAnalista tela = new TelaAnalista(usuario, pesquisas);
+            tela.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
