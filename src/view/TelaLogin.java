@@ -7,6 +7,7 @@ import Administracao.Usuario;
 import Tratamento_de_Excessoes.*;
 import javax.swing.JOptionPane;
 import Administracao.GerenciarUsuarios;
+import view.TelaCadastro;
 
 /**
  *
@@ -24,6 +25,29 @@ public class TelaLogin extends javax.swing.JFrame {
     public TelaLogin(GerenciarUsuarios gerenciarUsuarios) {
         this.gerenciarUsuarios = gerenciarUsuarios;
         initComponents();
+        
+        txtCadastro.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+        txtCadastro.setForeground(java.awt.Color.BLUE);
+
+        final java.awt.Font fonteNormal = txtCadastro.getFont();
+
+        java.util.Map<java.awt.font.TextAttribute, Object> atributos =
+                new java.util.HashMap<>(fonteNormal.getAttributes());
+        atributos.put(java.awt.font.TextAttribute.UNDERLINE,
+                java.awt.font.TextAttribute.UNDERLINE_ON);
+        final java.awt.Font fonteSublinhada = fonteNormal.deriveFont(atributos);
+
+        txtCadastro.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtCadastro.setFont(fonteSublinhada);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtCadastro.setFont(fonteNormal);
+            }
+        });
        
         final String dicaEmail = "Digite seu email";
 
@@ -93,96 +117,96 @@ public class TelaLogin extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        painelCentro = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtSenha = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtCadastro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema de eleições");
         setBackground(new java.awt.Color(0, 0, 102));
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        painelCentro.setBackground(new java.awt.Color(0, 0, 102));
-        painelCentro.setPreferredSize(new java.awt.Dimension(300, 250));
-        painelCentro.setVerifyInputWhenFocusTarget(false);
-
-        javax.swing.GroupLayout painelCentroLayout = new javax.swing.GroupLayout(painelCentro);
-        painelCentro.setLayout(painelCentroLayout);
-        painelCentroLayout.setHorizontalGroup(
-            painelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        painelCentroLayout.setVerticalGroup(
-            painelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(painelCentro, new java.awt.GridBagConstraints());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("SISTEMA DE LOGIN");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(53, 5, 0, 0);
-        getContentPane().add(jLabel1, gridBagConstraints);
 
         txtEmail.setForeground(java.awt.Color.lightGray);
         txtEmail.setText("Digite seu email");
         txtEmail.addActionListener(this::txtEmailActionPerformed);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.ipadx = 140;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 108, 0, 88);
-        getContentPane().add(txtEmail, gridBagConstraints);
 
         jLabel2.setText("Email:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(29, 108, 0, 0);
-        getContentPane().add(jLabel2, gridBagConstraints);
 
         jLabel3.setText("Senha:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 108, 0, 0);
-        getContentPane().add(jLabel3, gridBagConstraints);
 
         txtSenha.setText("jPasswordField1");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.ipadx = 140;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 108, 0, 88);
-        getContentPane().add(txtSenha, gridBagConstraints);
 
         btnLogin.setText("Entrar");
         btnLogin.addActionListener(this::btnLoginActionPerformed);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(18, 30, 51, 0);
-        getContentPane().add(btnLogin, gridBagConstraints);
+
+        jLabel4.setText("Não possui cadastro?");
+
+        txtCadastro.setText("Cadastre-se");
+        txtCadastro.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        txtCadastro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtCadastroMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(108, 108, 108)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(88, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(132, 132, 132))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnLogin)
+                        .addGap(161, 161, 161))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(136, 136, 136))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtCadastro)
+                        .addGap(160, 160, 160))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(jLabel1)
+                .addGap(27, 27, 27)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLogin)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCadastro)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -217,6 +241,18 @@ public class TelaLogin extends javax.swing.JFrame {
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
+
+    private void txtCadastroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCadastroMouseClicked
+        TelaCadastro cadastro = new TelaCadastro(gerenciarUsuarios);
+        cadastro.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            TelaLogin.this.setVisible(true);
+        }
+        });
+        cadastro.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_txtCadastroMouseClicked
 
     /**
      * @param args the command line arguments
@@ -253,7 +289,8 @@ public class TelaLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel painelCentro;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel txtCadastro;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtSenha;
     // End of variables declaration//GEN-END:variables
