@@ -45,25 +45,21 @@ public class Main {
             } else {
                 System.out.println("--- MENU DO USUARIO: " + logado.getNome() + " ---");
                 if (logado instanceof Administrador) {
-                    System.out.println("1 - Criar Nova Pesquisa");
+                    System.out.println("1 - Criar Pesquisa");
                     System.out.println("2 - Realizar Entrevista");
-                    System.out.println("3 - Gerar Relatorio Estatistico");
-                    System.out.println("4 - Gerenciar Partidos e Candidatos");
-                    System.out.println("5 - Cadastrar Usuario");
-                    System.out.println("6 - Listar Usuarios");
-                    System.out.println("7 - Ativar/Desativar Usuario");
-                    System.out.println("8 - Logout (Voltar ao Menu Inicial)");
+                    System.out.println("3 - Gerar Relatorio");
+                    System.out.println("4 - Cadastrar Usuario");
+                    System.out.println("5 - Listar Usuarios");
+                    System.out.println("6 - Ativar/Desativar Usuario");
+                    System.out.println("7 - Logout");
                 } else if (logado instanceof Pesquisador) {
-                    System.out.println("1 - Criar Nova Pesquisa");
+                    System.out.println("1 - Criar Pesquisa");
                     System.out.println("2 - Realizar Entrevista");
-                    System.out.println("3 - Gerar Relatorio Estatistico");
-                    System.out.println("4 - Gerenciar Partidos e Candidatos");
-                    System.out.println("5 - Logout (Voltar ao Menu Inicial)");
+                    System.out.println("3 - Gerar Relatorio");
+                    System.out.println("4 - Logout");
                 } else {
-                    // Analista pode consultar, mas nao alterar os dados eleitorais
                     System.out.println("1 - Gerar Relatorio Estatistico");
-                    System.out.println("2 - Visualizar Partidos e Candidatos");
-                    System.out.println("3 - Logout (Voltar ao Menu Inicial)");
+                    System.out.println("2 - Logout");
                 }
             }
             System.out.print("Escolha a opcao desejada: ");
@@ -91,15 +87,13 @@ public class Main {
                 } else if (menu == 3) {
                     gerarRelatorio(pesquisaAtual);
                 } else if (menu == 4) {
-                    gerenciarPartidosCandidatos(entrada, pesquisaAtual);
-                } else if (menu == 5) {
                     cadastrarUsuario(entrada, gerenciarUsuarios);
-                } else if (menu == 6) {
+                } else if (menu == 5) {
                     System.out.println("\n--- USUARIOS CADASTRADOS ---");
                     gerenciarUsuarios.listarUsuarios();
-                } else if (menu == 7) {
+                } else if (menu == 6) {
                     alterarStatusUsuario(entrada, gerenciarUsuarios, logado);
-                } else if (menu == 8) {
+                } else if (menu == 7) {
                     System.out.println("Logout realizado com sucesso.");
                     logado = null;
                 } else {
@@ -113,20 +107,16 @@ public class Main {
                 } else if (menu == 3) {
                     gerarRelatorio(pesquisaAtual);
                 } else if (menu == 4) {
-                    gerenciarPartidosCandidatos(entrada, pesquisaAtual);
-                } else if (menu == 5) {
                     System.out.println("Logout realizado com sucesso.");
                     logado = null;
                 } else {
                     System.out.println("Opcao invalida!");
                 }
             } else {
-                // Analista: consulta partidos e candidatos, sem permissao de alteracao
+                // Analista: acesso restrito à geração de relatório estatístico
                 if (menu == 1) {
                     gerarRelatorio(pesquisaAtual);
                 } else if (menu == 2) {
-                    visualizarPartidosCandidatos(pesquisaAtual);
-                } else if (menu == 3) {
                     System.out.println("Logout realizado com sucesso.");
                     logado = null;
                 } else {

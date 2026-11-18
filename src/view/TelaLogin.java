@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 import Administracao.GerenciarUsuarios;
 import view.TelaCadastro;
 import Administracao.Analista;
+import Administracao.Administrador;
+import Administracao.Pesquisador;
 import Pesquisas.Pesquisa;
 import java.util.ArrayList;
 import java.util.List;
@@ -247,8 +249,13 @@ public class TelaLogin extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuario.getNome() + "!");
         if (usuario instanceof Analista) {
-            TelaAnalista tela = new TelaAnalista(usuario, pesquisas);
-            tela.setVisible(true);
+            new TelaAnalista(usuario, pesquisas).setVisible(true);
+            this.dispose();
+        } else if (usuario instanceof Administrador) {
+            new TelaAdministrador(usuario, gerenciarUsuarios, pesquisas).setVisible(true);
+            this.dispose();
+        } else if (usuario instanceof Pesquisador) {
+            new TelaPesquisador((Pesquisador) usuario, pesquisas).setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_btnLoginActionPerformed

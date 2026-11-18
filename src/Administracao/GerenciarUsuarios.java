@@ -54,6 +54,11 @@ public class GerenciarUsuarios {
         return null;
     }
 
+    // Retorna uma cópia da lista para consulta pela interface gráfica.
+    public List<Usuario> getUsuarios() {
+        return new ArrayList<>(usuarioList);
+    }
+
     // Mostra todos os usuarios cadastrados
     public void listarUsuarios() {
         if (usuarioList.isEmpty()) {

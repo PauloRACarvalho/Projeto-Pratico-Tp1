@@ -37,7 +37,7 @@ public class TelaAnalista extends JFrame {
         setSize(1200, 760);
         setLocationRelativeTo(null);
         montarInterface();
-        mostrarPagina("Visão geral");
+        mostrarPagina("Relatório estatístico");
     }
 
     private void montarInterface() {
@@ -52,8 +52,7 @@ public class TelaAnalista extends JFrame {
         marca.setBorder(BorderFactory.createEmptyBorder(28, 20, 30, 10));
         lateral.add(marca);
 
-        String[] itens = {"Visão geral", "Pesquisas", "Candidatos e partidos",
-            "Entrevistas", "Relatórios estatísticos", "Comparar pesquisas"};
+        String[] itens = {"Relatório estatístico"};
         for (String item : itens) {
             JButton b = new JButton(item);
             b.setHorizontalAlignment(SwingConstants.LEFT);
@@ -91,12 +90,7 @@ public class TelaAnalista extends JFrame {
         add(topo, BorderLayout.NORTH);
 
         paginas.setBackground(fundo);
-        adicionarPagina("Visão geral", criarVisaoGeral());
-        adicionarPagina("Pesquisas", criarTabelaPesquisas());
-        adicionarPagina("Candidatos e partidos", criarCandidatosPartidos());
-        adicionarPagina("Entrevistas", criarEntrevistas());
-        adicionarPagina("Relatórios estatísticos", criarRelatorios());
-        adicionarPagina("Comparar pesquisas", criarComparacao());
+        adicionarPagina("Relatório estatístico", criarRelatorios());
         conteudo.setBackground(fundo);
         conteudo.add(paginas, BorderLayout.CENTER);
         add(conteudo, BorderLayout.CENTER);
@@ -267,28 +261,16 @@ public class TelaAnalista extends JFrame {
     }
 
     private JPanel criarRelatorios() {
-        JPanel p=pagina("Relatórios estatísticos","Selecione uma pesquisa para consultar os dados estruturais e exportar um resumo.");
-        JPanel form=new JPanel(new FlowLayout(FlowLayout.LEFT,12,12));
-        form.setBackground(Color.WHITE);
-        JComboBox<Pesquisa> combo=new JComboBox<>(pesquisas.toArray(new Pesquisa[0]));
-        combo.setRenderer((list,value,index,selected,focus)->new JLabel(value==null?"":value.getCodigo()+" - "+value.getCargo()));
-        JButton gerar=new JButton("Exportar relatório (.txt)");
-        JLabel nota=new JLabel("Não há respostas coletadas vinculadas às opções; percentuais eleitorais não podem ser calculados.");
-        nota.setForeground(new Color(180,83,9));
-        gerar.addActionListener(e->{
-            Pesquisa q=(Pesquisa)combo.getSelectedItem();
-            if(q==null){aviso("Não há pesquisas disponíveis.");return;}
-            JFileChooser fc=new JFileChooser(); fc.setSelectedFile(new File("relatorio_"+q.getCodigo()+".txt"));
-            if(fc.showSaveDialog(this)==JFileChooser.APPROVE_OPTION){
-                try{salvarRelatorio(q,fc.getSelectedFile());aviso("Relatório exportado com sucesso.");}
-                catch(IOException ex){aviso("Erro ao salvar: "+ex.getMessage());}
-            }
-        });
-        form.add(new JLabel("Pesquisa:")); form.add(combo); form.add(gerar);
-        JPanel texto=new JPanel(new BorderLayout()); texto.setBackground(Color.WHITE);
-        texto.setBorder(BorderFactory.createEmptyBorder(18,18,18,18));
-        texto.add(nota,BorderLayout.NORTH);
-        p.add(form,BorderLayout.NORTH); p.add(texto,BorderLayout.CENTER);
+        JPanel p = pagina("Relatório estatístico", "Selecione uma pesquisa para gerar o relatório estatístico.");
+        JButton gerar = new JButton("Selecionar pesquisa e gerar relatório");
+        gerar.addActionListener(e -> OperacoesGUI.gerarRelatorio(this, pesquisas, "Relatório estatístico"));
+        JPanel centro = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 16));
+        centro.setOpaque(false);
+        centro.add(gerar);
+        JLabel nota = new JLabel("O relatório utiliza as entrevistas registradas durante a sessão atual.");
+        nota.setForeground(new Color(100, 116, 139));
+        centro.add(nota);
+        p.add(centro, BorderLayout.NORTH);
         return p;
     }
 

@@ -67,6 +67,9 @@ public class Pesquisa {
         }
     }
 
+    @Override
+    public String toString() { return codigo + " - " + cargo; }
+
     // Getters e Setters
     public String getCodigo() { return codigo; }
     public void setCodigo(String codigo) { this.codigo = codigo; }

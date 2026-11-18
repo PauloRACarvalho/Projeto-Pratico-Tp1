@@ -9,6 +9,9 @@ public class OpcaoResposta {
         this.identficacao = identificacao;
 
     }
+    @Override
+    public String toString() { return descricao; }
+
     //GET e SET
 
 

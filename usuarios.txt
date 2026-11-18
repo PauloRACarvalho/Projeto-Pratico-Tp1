@@ -4,6 +4,4 @@ eric;eric@gmail.com;Eric#123;Analista;Ativo
 maria;maria@gmail.com;@M4r14;analista;Desativado
 fernando;fernando@gmail.com;@F3rn4nd0;pesquisador;Ativo
 Audrey;Audrey@gmail.com;Audrey_1;Pesquisador;Ativo
-Ultron;ultron@gmail.com;Ultron@22;Analista;Ativo
-Paulo;paulo.adm@gmail.com;Paulo@adm11;Administrador;Ativo
-
+Isabele Sandra Gontijo dos Santos;isabelesandra.gontijo@gmail.com;Is@bele05;Administrador;Ativo
