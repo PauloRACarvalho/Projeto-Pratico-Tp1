@@ -47,6 +47,7 @@ public final class OperacoesGUI {
             nova.adicionarPergunta(pergunta);
             pesquisas.add(nova);
             if (pesquisador != null) pesquisador.cadastrarPesquisa(nova);
+            ArquivoPesquisas.salvar(pesquisas);
             JOptionPane.showMessageDialog(pai, "Pesquisa cadastrada com sucesso por " + criador.getNome() + ".");
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(pai, "A quantidade de entrevistados deve ser um número inteiro.", "Dados inválidos", JOptionPane.ERROR_MESSAGE);
