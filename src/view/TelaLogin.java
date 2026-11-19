@@ -12,7 +12,10 @@ import Administracao.Analista;
 import Administracao.Administrador;
 import Administracao.Pesquisador;
 import Pesquisas.Pesquisa;
+<<<<<<< HEAD
 import Pesquisas.ArquivoPesquisas;
+=======
+>>>>>>> origin/main
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,11 @@ public class TelaLogin extends javax.swing.JFrame {
     private List<Pesquisa> pesquisas;
 
     public TelaLogin(GerenciarUsuarios gerenciarUsuarios) {
+<<<<<<< HEAD
         this(gerenciarUsuarios, ArquivoPesquisas.carregar());
+=======
+        this(gerenciarUsuarios, new ArrayList<Pesquisa>());
+>>>>>>> origin/main
     }
 
     public TelaLogin(GerenciarUsuarios gerenciarUsuarios, List<Pesquisa> pesquisas) {
@@ -256,6 +263,7 @@ public class TelaLogin extends javax.swing.JFrame {
             new TelaAdministrador(usuario, gerenciarUsuarios, pesquisas).setVisible(true);
             this.dispose();
         } else if (usuario instanceof Pesquisador) {
+<<<<<<< HEAD
             Pesquisador pesquisador = (Pesquisador) usuario;
             for (Pesquisa pesquisa : pesquisas) {
                 if (!pesquisador.consultarPesquisas().contains(pesquisa)) {
@@ -263,6 +271,9 @@ public class TelaLogin extends javax.swing.JFrame {
                 }
             }
             new TelaPesquisador(pesquisador, pesquisas).setVisible(true);
+=======
+            new TelaPesquisador((Pesquisador) usuario, pesquisas).setVisible(true);
+>>>>>>> origin/main
             this.dispose();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
