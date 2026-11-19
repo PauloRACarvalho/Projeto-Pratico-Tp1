@@ -129,7 +129,7 @@ public class TelaPrincipal extends JFrame {
             return;
         }
         boolean podeEditar = usuario instanceof Administrador || usuario instanceof Pesquisador;
-        new TelaPartidosCandidatos(this, pesquisaAtual, podeEditar).setVisible(true);
+        new TelaPartidosCandidatos(this, pesquisaAtual, usuario, null).setVisible(true);
     }
 
     private void voltarLogin() {

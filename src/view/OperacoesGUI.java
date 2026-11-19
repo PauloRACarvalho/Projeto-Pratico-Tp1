@@ -14,6 +14,7 @@ import javax.swing.*;
 /** Operações compartilhadas pelos painéis gráficos, respeitando os perfis. */
 public final class OperacoesGUI {
     private static final Map<String, List<Entrevista>> entrevistasPorPesquisa = new LinkedHashMap<>();
+    private static final List<Entrevistado> entrevistados = ArquivoEntrevistados.carregar();
     private static int proximoIdEntrevista = 1;
     private static int proximoIdResposta = 1;
     private OperacoesGUI() {}
@@ -40,17 +41,12 @@ public final class OperacoesGUI {
             }
             Pesquisa nova = new Pesquisa(cod, car, per, qtd, met);
             nova.setSituacao(new SituacaoPesquisa(pesquisas.size() + 1, "Em andamento"));
-            Pergunta pergunta = new Pergunta(1, "Em qual candidato você votaria?");
-            pergunta.adicionarOpcao(new OpcaoResposta(1, "Candidato A"));
-            pergunta.adicionarOpcao(new OpcaoResposta(2, "Candidato B"));
-            pergunta.adicionarOpcao(new OpcaoResposta(3, "Nulo/Branco"));
-            nova.adicionarPergunta(pergunta);
             pesquisas.add(nova);
             if (pesquisador != null) pesquisador.cadastrarPesquisa(nova);
-<<<<<<< HEAD
+
             ArquivoPesquisas.salvar(pesquisas);
-=======
->>>>>>> origin/main
+
+
             JOptionPane.showMessageDialog(pai, "Pesquisa cadastrada com sucesso por " + criador.getNome() + ".");
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(pai, "A quantidade de entrevistados deve ser um número inteiro.", "Dados inválidos", JOptionPane.ERROR_MESSAGE);
@@ -79,7 +75,7 @@ public final class OperacoesGUI {
             if (classe == null) return;
             if (pesquisa.getPerguntas().isEmpty()) { aviso(pai, "A pesquisa selecionada não possui perguntas cadastradas."); return; }
             Entrevista entrevista = new Entrevista(proximoIdEntrevista++, "Concluída");
-            entrevista.setEntrevistado(new Entrevistado(entrevista.getIdentificacao(), idade, escolaridade, genero, classe));
+            entrevista.setEntrevistado(new Entrevistado(entrevistados.size() + 1, idade, escolaridade, genero, classe));
             entrevista.setEntrevistador(new Entrevistador(1, usuario.getNome()));
             for (Pergunta pergunta : pesquisa.getPerguntas()) {
                 List<OpcaoResposta> opcoes = pergunta.getOpcoes();
@@ -90,6 +86,8 @@ public final class OperacoesGUI {
                 OpcaoResposta opcao = (OpcaoResposta) escolha;
                 entrevista.adicionarResposta(new Resposta(proximoIdResposta++, pergunta.getIdentificacao() + ";" + opcao.getIdentficacao() + ";" + opcao.getDescricao()));
             }
+            entrevistados.add(entrevista.getEntrevistado());
+            ArquivoEntrevistados.salvar(entrevistados);
             entrevistasPorPesquisa.computeIfAbsent(pesquisa.getCodigo(), k -> new ArrayList<>()).add(entrevista);
             JOptionPane.showMessageDialog(pai, "Entrevista registrada para a pesquisa " + pesquisa.getCodigo() + ".");
         } catch (NumberFormatException ex) {
@@ -130,12 +128,7 @@ public final class OperacoesGUI {
         if (entrevistas.isEmpty()) relatorio.append("\nAinda não há entrevistas registradas para esta pesquisa nesta sessão.\n");
         JTextArea area = new JTextArea(relatorio.toString(), 22, 65); area.setEditable(false); area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JOptionPane.showMessageDialog(pai, new JScrollPane(area), titulo, JOptionPane.INFORMATION_MESSAGE);
-        JFileChooser chooser = new JFileChooser(); chooser.setSelectedFile(new File("relatorio_" + pesquisa.getCodigo() + ".txt"));
-        if (chooser.showSaveDialog(pai) == JFileChooser.APPROVE_OPTION) {
-            try (Writer w = new OutputStreamWriter(new FileOutputStream(chooser.getSelectedFile()), StandardCharsets.UTF_8)) {
-                w.write(relatorio.toString()); aviso(pai, "Relatório salvo com sucesso.");
-            } catch (IOException ex) { aviso(pai, "Não foi possível salvar o relatório: " + ex.getMessage()); }
-        }
+        
     }
 
     public static List<Entrevista> getEntrevistas(Pesquisa pesquisa) {

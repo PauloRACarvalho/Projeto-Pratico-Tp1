@@ -32,9 +32,11 @@ public class TelaAdministrador extends JFrame {
         JLabel marca = new JLabel("<html><b>SISTEMA ELEITORAL</b><br><font size='3'>Painel do Administrador</font></html>");
         marca.setForeground(Color.WHITE); marca.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         marca.setBorder(BorderFactory.createEmptyBorder(28, 20, 30, 8)); lateral.add(marca);
-        for (String item : new String[]{"Visão geral", "Criar pesquisa", "Realizar entrevista", "Gerar relatórios", "Usuários"}) {
+        for (String item : new String[]{"Visão geral", "Criar pesquisa", "Perguntas", "Partidos e candidatos", "Realizar entrevista", "Gerar relatórios", "Usuários"}) {
             JButton botao = menu(item); botao.addActionListener(e -> {
                 if (item.equals("Criar pesquisa")) { OperacoesGUI.criarPesquisa(this, usuario, pesquisas, null); atualizarVisao(); }
+                else if (item.equals("Perguntas")) new TelaPerguntas(this, usuario, pesquisas).setVisible(true);
+                else if (item.equals("Partidos e candidatos")) abrirPartidosCandidatos();
                 else if (item.equals("Realizar entrevista")) OperacoesGUI.realizarEntrevista(this, usuario, pesquisas);
                 else if (item.equals("Gerar relatórios")) OperacoesGUI.gerarRelatorio(this, pesquisas, "Relatório");
                 else mostrar(item);
@@ -87,6 +89,17 @@ public class TelaAdministrador extends JFrame {
     private DefaultTableModel modeloUsuarios() { return new DefaultTableModel(dadosUsuarios(), new String[]{"Nome", "Email", "Perfil", "Status"}) { public boolean isCellEditable(int r, int c) { return false; } }; }
     private Object[][] dadosUsuarios() { List<Usuario> us = gerenciador.getUsuarios(); Object[][] d = new Object[us.size()][4]; for (int i=0;i<us.size();i++) { Usuario u=us.get(i); d[i]=new Object[]{u.getNome(),u.getEmail(),u.getPerfil(),u.getStatus()}; } return d; }
     private JTable tabelaUsuarios() { return new JTable(modeloUsuarios()); }
+
+    private void abrirPartidosCandidatos() {
+        if (pesquisas.isEmpty()) {
+            ComponentesPainel.aviso(this, "Cadastre uma pesquisa antes de gerenciar partidos e candidatos.");
+            return;
+        }
+        Pesquisa pesquisa = (Pesquisa) JOptionPane.showInputDialog(this, "Selecione a pesquisa:",
+                "Partidos e candidatos", JOptionPane.QUESTION_MESSAGE, null,
+                pesquisas.toArray(), pesquisas.get(0));
+        if (pesquisa != null) new TelaPartidosCandidatos(this, pesquisa, usuario, pesquisas).setVisible(true);
+    }
 
     private void cadastrarUsuario() {
         JTextField nome = new JTextField(), email = new JTextField(); JPasswordField senha = new JPasswordField();

@@ -3,6 +3,11 @@ package view;
 import Candidatos_Partidos.Candidato;
 import Candidatos_Partidos.Partidos;
 import Pesquisas.Pesquisa;
+import Pesquisas.ArquivoPesquisas;
+import Administracao.Administrador;
+import Administracao.Pesquisador;
+import Administracao.Usuario;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,6 +17,7 @@ import java.awt.*;
 public class TelaPartidosCandidatos extends JFrame {
     private final Pesquisa pesquisa;
     private final boolean podeEditar;
+    private final List<Pesquisa> pesquisasSalvas;
     private final DefaultTableModel modeloPartidos = new DefaultTableModel(
             new Object[]{"Nome", "Sigla", "Número", "Situação"}, 0) {
         @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -23,9 +29,14 @@ public class TelaPartidosCandidatos extends JFrame {
     private final JTable tabelaPartidos = new JTable(modeloPartidos);
     private final JTable tabelaCandidatos = new JTable(modeloCandidatos);
 
-    public TelaPartidosCandidatos(JFrame pai, Pesquisa pesquisa, boolean podeEditar) {
+    public TelaPartidosCandidatos(JFrame pai, Pesquisa pesquisa, Usuario usuario, List<Pesquisa> pesquisas) {
+        this(pai, pesquisa, usuario instanceof Administrador || usuario instanceof Pesquisador, pesquisas);
+    }
+
+    private TelaPartidosCandidatos(JFrame pai, Pesquisa pesquisa, boolean podeEditar, List<Pesquisa> pesquisas) {
         this.pesquisa = pesquisa;
         this.podeEditar = podeEditar;
+        this.pesquisasSalvas = pesquisas;
         setTitle("Partidos e candidatos — " + pesquisa.getCodigo());
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(820, 500);
@@ -114,6 +125,7 @@ public class TelaPartidosCandidatos extends JFrame {
                 }
             }
             pesquisa.adicionarPartido(new Partidos(n, s.toUpperCase(), num, "Ativo"));
+            salvarAlteracoes();
             atualizarTabelas();
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, "Informe nome, sigla e número inteiro positivo.",
@@ -151,6 +163,7 @@ public class TelaPartidosCandidatos extends JFrame {
             Candidato candidato = new Candidato(n, num, c, "Ativo");
             candidato.setPartido((Partidos) partido.getSelectedItem());
             pesquisa.adicionarCandidato(candidato);
+            salvarAlteracoes();
             atualizarTabelas();
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, "Informe nome, cargo e número inteiro positivo.",
@@ -167,6 +180,7 @@ public class TelaPartidosCandidatos extends JFrame {
         Partidos partido = pesquisa.getPartidos().get(tabelaPartidos.convertRowIndexToModel(linha));
         if ("Ativo".equalsIgnoreCase(partido.getSituacao())) partido.desativar();
         else partido.ativar();
+        salvarAlteracoes();
         atualizarTabelas();
     }
 
@@ -179,6 +193,11 @@ public class TelaPartidosCandidatos extends JFrame {
         Candidato candidato = pesquisa.getCandidatos().get(tabelaCandidatos.convertRowIndexToModel(linha));
         if ("Ativo".equalsIgnoreCase(candidato.getSituacao())) candidato.desativar();
         else candidato.ativar();
+        salvarAlteracoes();
         atualizarTabelas();
+    }
+
+    private void salvarAlteracoes() {
+        if (podeEditar && pesquisasSalvas != null) ArquivoPesquisas.salvar(pesquisasSalvas);
     }
 }

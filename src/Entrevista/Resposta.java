@@ -9,7 +9,7 @@ public class Resposta {
         this.identificacao = identificacao;
     }
 
-    //GET e SET
+    //Gets e Sets
 
     public int getIdentificacao() {
         return identificacao;

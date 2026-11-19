@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
-/** Painel do Pesquisador: criar pesquisas, realizar entrevistas e gerar relatórios. */
+// criar pesquisas, realizar entrevistas e gerar relatórios
 public class TelaPesquisador extends JFrame {
     private final Pesquisador pesquisador;
     private final List<Pesquisa> pesquisas;
@@ -23,10 +23,20 @@ public class TelaPesquisador extends JFrame {
     private void montar() {
         setLayout(new BorderLayout()); JPanel lateral=new JPanel(); lateral.setBackground(ComponentesPainel.LATERAL); lateral.setPreferredSize(new Dimension(245,0)); lateral.setLayout(new BoxLayout(lateral,BoxLayout.Y_AXIS));
         JLabel marca=new JLabel("<html><b>SISTEMA ELEITORAL</b><br><font size='3'>Painel do Pesquisador</font></html>"); marca.setForeground(Color.WHITE); marca.setFont(new Font("Segoe UI",Font.PLAIN,16)); marca.setBorder(BorderFactory.createEmptyBorder(28,20,30,8)); lateral.add(marca);
-        for(String item:new String[]{"Visão geral","Criar pesquisa","Realizar entrevista","Gerar relatórios"}) { JButton b=menu(item); b.addActionListener(e->{ if(item.equals("Criar pesquisa")){OperacoesGUI.criarPesquisa(this,pesquisador,pesquisas,pesquisador);atualizarVisao();} else if(item.equals("Realizar entrevista")) OperacoesGUI.realizarEntrevista(this,pesquisador,pesquisas); else if(item.equals("Gerar relatórios")) OperacoesGUI.gerarRelatorio(this,pesquisas,"Relatório"); else mostrar(item); }); lateral.add(b); }
+        for(String item:new String[]{"Visão geral","Criar pesquisa","Perguntas","Partidos e candidatos","Realizar entrevista","Gerar relatórios"}) { JButton b=menu(item); b.addActionListener(e->{ if(item.equals("Criar pesquisa")){OperacoesGUI.criarPesquisa(this,pesquisador,pesquisas,pesquisador);atualizarVisao();} else if(item.equals("Perguntas")) new TelaPerguntas(this,pesquisador,pesquisas).setVisible(true); else if(item.equals("Partidos e candidatos")) abrirPartidosCandidatos(); else if(item.equals("Realizar entrevista")) OperacoesGUI.realizarEntrevista(this,pesquisador,pesquisas); else if(item.equals("Gerar relatórios")) OperacoesGUI.gerarRelatorio(this,pesquisas,"Relatório"); else mostrar(item); }); lateral.add(b); }
         lateral.add(Box.createVerticalGlue()); JButton sair=menu("Sair"); sair.addActionListener(e->dispose()); lateral.add(sair); add(lateral,BorderLayout.WEST);
         JPanel topo=new JPanel(new BorderLayout()); topo.setBackground(Color.WHITE); topo.setBorder(BorderFactory.createEmptyBorder(18,28,18,28)); titulo.setFont(new Font("Segoe UI",Font.BOLD,23)); topo.add(titulo,BorderLayout.WEST); topo.add(new JLabel("Olá, "+pesquisador.getNome()+"  |  PESQUISADOR"),BorderLayout.EAST); add(topo,BorderLayout.NORTH);
         paginas.setBackground(ComponentesPainel.FUNDO); paginas.add(visao(),"Visão geral"); add(paginas,BorderLayout.CENTER);
+    }
+    private void abrirPartidosCandidatos() {
+        if (pesquisas.isEmpty()) {
+            ComponentesPainel.aviso(this, "Cadastre uma pesquisa antes de gerenciar partidos e candidatos.");
+            return;
+        }
+        Pesquisa pesquisa = (Pesquisa) JOptionPane.showInputDialog(this, "Selecione a pesquisa:",
+                "Partidos e candidatos", JOptionPane.QUESTION_MESSAGE, null,
+                pesquisas.toArray(), pesquisas.get(0));
+        if (pesquisa != null) new TelaPartidosCandidatos(this, pesquisa, pesquisador, pesquisas).setVisible(true);
     }
     private JButton menu(String n){JButton b=new JButton(n);b.setMaximumSize(new Dimension(Integer.MAX_VALUE,48));b.setHorizontalAlignment(SwingConstants.LEFT);b.setForeground(Color.WHITE);b.setBackground(ComponentesPainel.LATERAL);b.setBorder(BorderFactory.createEmptyBorder(13,20,13,8));b.setFocusPainted(false);return b;}
     private void mostrar(String n){titulo.setText(n);((CardLayout)paginas.getLayout()).show(paginas,n);}

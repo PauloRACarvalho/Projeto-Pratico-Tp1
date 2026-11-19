@@ -9,7 +9,7 @@ public class Entrevistador {
         this.nome = nome;
     }
 
-    //GET e SET
+    //Gets e Sets
     public String getNome() {
         return nome;
     }

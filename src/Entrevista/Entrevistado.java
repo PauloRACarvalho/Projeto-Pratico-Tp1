@@ -8,14 +8,13 @@ public class Entrevistado {
     private String classeSocial;
 
     public Entrevistado(int codigo, int idade, String escolaridade, String genero, String classeSocial) {
-        this.codigo = codigo;               // 1º parâmetro
-        this.idade = idade;                 // 2º parâmetro
-        this.escolaridade = escolaridade;   // 3º parâmetro
-        this.genero = genero;               // 4º parâmetro
-        this.classeSocial = classeSocial;   // 5º parâmetro
+        this.codigo = codigo;
+        this.idade = idade;
+        this.escolaridade = escolaridade;
+        this.genero = genero;
+        this.classeSocial = classeSocial;
     }
-
-    //GET e SET
+    //Gets e Sets
 
     public int getCodigo() {
         return codigo;
