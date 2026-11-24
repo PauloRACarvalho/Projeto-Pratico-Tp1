@@ -23,8 +23,8 @@ O desenvolvimento foi dividido em quatro etapas: Estrutura Inicial, Design e Mod
 
 | Integrante | Módulo responsável |
 |---|---|
-| Audrey Coutinho Soares | Administração |
-| Anna Clara Faria Gomes | Pesquisas |
+| Anna Clara Faria Gomes | Administração |
+| Audrey Coutinho Soares | Pesquisas |
 | Paulo Ricardo Almeida Carvalho | Coleta e Amostra |
 | Isabele Sandra Gontijo dos Santos | Análise Estatística e Relatórios |
 
