@@ -39,3 +39,7 @@ build/
 .DS_Store
 INTEGRACAO_TELAS_ADMIN_PESQUISADOR.txt
 INTEGRACAO_TELA_ANALISTA.txt
+
+src/usuarios.txt
+src/entrevistados.txt
+src/pesquisas.txt
