@@ -31,7 +31,7 @@ public class TipoPesquisa {
         System.out.println("Tipo de pesquisa alterado com sucesso!");
     }
 
-    //GET e SET
+    //Gets e Sets
 
     public int getIdentificacao() {
         return identificacao;

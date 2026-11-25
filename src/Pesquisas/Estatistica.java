@@ -1,24 +1,19 @@
 package Pesquisas;
 
 public class Estatistica {
-    // Atributos (nenhum explícito no diagrama, mas vamos precisar)
     private Pesquisa pesquisaReferencia;
     private int totalRespostas;
 
-    // Construtor
     public Estatistica(Pesquisa pesquisa) {
         this.pesquisaReferencia = pesquisa;
         this.totalRespostas = 0;
     }
 
-    // 🔑 MÉTODOS DO DIAGRAMA UML
 
     public int calcularRespostas() {
-        // Calcula o total de respostas de uma pesquisa
         if (pesquisaReferencia != null && pesquisaReferencia.getPerguntas() != null) {
             int total = 0;
             for (Pergunta p : pesquisaReferencia.getPerguntas()) {
-                // Conta as opções de resposta de cada pergunta
                 if (p.getOpcoes() != null) {
                     total += p.getOpcoes().size();
                 }
@@ -31,7 +26,6 @@ public class Estatistica {
     }
 
     public void distribuiRspostas() {
-        // Distribui/resume as respostas coletadas
         System.out.println("=== Distribuição de Respostas ===");
         if (pesquisaReferencia != null) {
             System.out.println("Pesquisa: " + pesquisaReferencia.getCodigo());
@@ -46,7 +40,6 @@ public class Estatistica {
     }
 
     public Pesquisa comparaPesquisas() {
-        // Compara esta pesquisa com outras (lógica simplificada)
         System.out.println("Comparando pesquisas...");
 
         if (pesquisaReferencia != null) {
@@ -55,12 +48,10 @@ public class Estatistica {
             System.out.println("Período de coleta: " + pesquisaReferencia.getPeriodoColeta());
         }
 
-        // Retorna a pesquisa de referência (em um sistema real, compararia com outras)
         return pesquisaReferencia;
     }
 
     public Estatistica getRelatorio() {
-        // Gera um relatório estatístico completo
         System.out.println("=== RELATÓRIO ESTATÍSTICO ===");
 
         if (pesquisaReferencia != null) {
@@ -70,11 +61,9 @@ public class Estatistica {
             System.out.println("Período de Coleta: " + pesquisaReferencia.getPeriodoColeta());
             System.out.println("Qtde. Entrevistados: " + pesquisaReferencia.getQtdeEntrevistados());
 
-            // Calcula e exibe estatísticas
             int totalRespostas = calcularRespostas();
             System.out.println("Total de Opções de Resposta: " + totalRespostas);
 
-            // Status da pesquisa
             if (pesquisaReferencia.getSituacao() != null) {
                 System.out.println("Situação: " + pesquisaReferencia.getSituacao().getStatus());
             }
@@ -84,10 +73,10 @@ public class Estatistica {
 
         System.out.println("=============================");
 
-        return this; // Retorna a própria instância de Estatistica
+        return this;
     }
 
-    //  GETTERS E SETTERS
+    //  Gets e Sets
 
     public Pesquisa getPesquisaReferencia() {
         return pesquisaReferencia;

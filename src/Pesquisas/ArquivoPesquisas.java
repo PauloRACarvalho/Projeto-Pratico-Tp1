@@ -6,7 +6,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/** Persistência das pesquisas, incluindo perguntas, opções, partidos e candidatos. */
 public final class ArquivoPesquisas {
     private static final String ARQUIVO = "pesquisas.txt";
     private ArquivoPesquisas() {}

@@ -10,7 +10,7 @@ public class PlanoAmostral {
         this.metodologia = metodologia;
     }
 
-    //GET e SET
+    //Gets e Sets
     public int getTamanhoPrevisto() {
         return tamanhoPrevisto;
     }

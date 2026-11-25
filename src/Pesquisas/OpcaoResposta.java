@@ -12,7 +12,7 @@ public class OpcaoResposta {
     @Override
     public String toString() { return descricao; }
 
-    //GET e SET
+    //Gets e Sets
 
 
     public int getIdentficacao() {

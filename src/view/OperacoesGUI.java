@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
-/** Operações compartilhadas pelos painéis gráficos, respeitando os perfis. */
+//Operações compartilhadas pelos painéis gráficos de acrdo com os perfis
 public final class OperacoesGUI {
     private static final Map<String, List<Entrevista>> entrevistasPorPesquisa = new LinkedHashMap<>();
     private static final List<Entrevistado> entrevistados = ArquivoEntrevistados.carregar();
@@ -36,6 +36,7 @@ public final class OperacoesGUI {
             int qtd = Integer.parseInt(quantidade.getText().trim());
             if (cod.isEmpty() || car.isEmpty() || per.isEmpty() || met.isEmpty() || qtd <= 0)
                 throw new IllegalArgumentException();
+            //duplicata/ja existente
             for (Pesquisa existente : pesquisas) if (existente.getCodigo().equalsIgnoreCase(cod)) {
                 JOptionPane.showMessageDialog(pai, "Já existe uma pesquisa com esse código."); return;
             }

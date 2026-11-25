@@ -15,7 +15,6 @@ public class SituacaoPesquisa {
     }
 
     public void alterarStatus(String statusNovo){
-        //vai validar primeiro o status, se for valido vai retornar true e entra no if
         if (ValidarTransicaoStatus(statusNovo)){
             this.status = statusNovo;
             System.out.println("Status alterado para: " + statusNovo);
@@ -25,11 +24,9 @@ public class SituacaoPesquisa {
     }
 
     public boolean ValidarTransicaoStatus(String statusNovo){
-        //Não pode voltar de Concluído para em andamento
         if (this.status.equals("Concluído") && statusNovo.equals("Em andamento")){
             return false;
         }
-        //Depois que cancela não tem como alterar
         if (this.status.equals("Cancelada")){
             return false;
         }
@@ -37,7 +34,7 @@ public class SituacaoPesquisa {
     }
 
 
-    //GET e SET
+    //Gets e Sets
     public int getIdentificacao() {
         return identificacao;
     }
