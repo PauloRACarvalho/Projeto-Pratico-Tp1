@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-/** Cadastro e consulta de perguntas e opções vinculadas a uma pesquisa. */
+//Cadastro e consulta de perguntas e opções vinculadas a uma pesquisa.
 public class TelaPerguntas extends JFrame {
     private final List<Pesquisa> pesquisas;
     private final DefaultTableModel modelo = new DefaultTableModel(

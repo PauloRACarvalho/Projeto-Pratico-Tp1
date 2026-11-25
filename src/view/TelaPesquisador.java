@@ -14,6 +14,8 @@ public class TelaPesquisador extends JFrame {
     private final JPanel paginas = new JPanel(new CardLayout());
     private final JLabel titulo = new JLabel("Visão geral");
 
+
+    //inicia a tela
     public TelaPesquisador(Pesquisador pesquisador) { this(pesquisador, pesquisador.getMinhasPesquisas()); }
     public TelaPesquisador(Pesquisador pesquisador, List<Pesquisa> pesquisas) {
         this.pesquisador=pesquisador;
@@ -26,6 +28,8 @@ public class TelaPesquisador extends JFrame {
         montar();
         mostrar("Visão geral");
     }
+
+    //Divide a janela em topo, leteral e centro
     private void montar() {
         setLayout(new BorderLayout());
         JPanel lateral=new JPanel();
@@ -38,7 +42,7 @@ public class TelaPesquisador extends JFrame {
         marca.setBorder(BorderFactory.createEmptyBorder(28,20,30,8));
         lateral.add(marca);
 
-        // trecho dos botões
+        // trecho dos botões do Menu
         for(String item:new String[]{"Visão geral","Criar pesquisa","Perguntas","Partidos e candidatos","Realizar entrevista","Gerar relatórios"}) {
             JButton b=menu(item);
             b.addActionListener(e->{
@@ -49,7 +53,8 @@ public class TelaPesquisador extends JFrame {
                 else if(item.equals("Partidos e candidatos")) abrirPartidosCandidatos();
                 else if(item.equals("Realizar entrevista")) OperacoesGUI.realizarEntrevista(this,pesquisador,pesquisas);
                 else if(item.equals("Gerar relatórios")) OperacoesGUI.gerarRelatorio(this,pesquisas,"Relatório");
-                else mostrar(item); }); lateral.add(b);
+                else mostrar(item); });
+            lateral.add(b);
         }
         lateral.add(Box.createVerticalGlue());
         JButton sair=menu("Sair");
