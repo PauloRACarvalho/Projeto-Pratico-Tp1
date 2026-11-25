@@ -27,8 +27,8 @@ public class TelaCadastro extends javax.swing.JFrame {
         this.gerenciarUsuarios = gerenciarUsuarios;
         initComponents();
         configurarDicasDosCampos();
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); //posiciona as janelas no centro da tela
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); //fecha so a janela de cadastro e vai pra login
     }
 
     /**
@@ -43,6 +43,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         configurarDicaSenha(txtConfirmarSenha);
     }
 
+    //enquanto o usuario nao escreve fica cinza, depois que ele escreve fica preto
     private void configurarDica(javax.swing.JTextField campo, String dica) {
         campo.setForeground(java.awt.Color.GRAY);
         campo.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -226,7 +227,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         String senha = new String(txtSenha.getPassword());
         String confirmar = new String(txtConfirmarSenha.getPassword());
 
-        // 1. Campos obrigatórios
+        // Verifica se os campos estao vazios
         if (nome.isEmpty() || nome.equals("Digite seu nome")
                 || email.isEmpty() || email.equals("Digite seu email")
                 || senha.isEmpty() || senha.equals("Digite sua senha")
@@ -236,9 +237,9 @@ public class TelaCadastro extends javax.swing.JFrame {
             return;
         }
 
-        // 2. Validação do email
+        // Validação do email
         try {
-            Usuario.validarEmail(email);
+            Usuario.validarEmail(email); //usa static, por isso nao instanciei
         } catch (ValidarEmailException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(),
                     "Email inválido", JOptionPane.ERROR_MESSAGE);
@@ -246,9 +247,9 @@ public class TelaCadastro extends javax.swing.JFrame {
             return;
         }
 
-        // 3. Validação da senha
+        // Validação da senha
         try {
-            Usuario.validarSenha(senha);
+            Usuario.validarSenha(senha); //por isso é static
         } catch (ValidarSenhaTipo1Exception | ValidarSenhaTipo2Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage(),
                     "Senha inválida", JOptionPane.ERROR_MESSAGE);
@@ -256,7 +257,7 @@ public class TelaCadastro extends javax.swing.JFrame {
             return;
         }
 
-        // 4. Confirmação da senha
+        // Confirmação da senha
         if (!senha.equals(confirmar)) {
             JOptionPane.showMessageDialog(this, "As senhas não conferem.",
                     "Erro", JOptionPane.ERROR_MESSAGE);
@@ -264,9 +265,9 @@ public class TelaCadastro extends javax.swing.JFrame {
             return;
         }
 
-        // 5. Cria o usuário conforme o perfil
+        // Cria o usuário conforme o perfil
         try {
-            Usuario usuario;
+            Usuario usuario; //usuario instanciado AQUI
             if ("Administrador".equalsIgnoreCase(perfil)) {
                 usuario = new Administrador(nome, email, senha, perfil);
             } else if ("Analista".equalsIgnoreCase(perfil)) {
@@ -279,7 +280,7 @@ public class TelaCadastro extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso!");
             dispose(); // fecha a tela de cadastro e volta pro login
-        } catch (Exception e) {
+        } catch (Exception e) { //captura qualquer exceção da biblioteca
             JOptionPane.showMessageDialog(this, "Erro ao criar usuário: " + e.getMessage(),
                     "Erro", JOptionPane.ERROR_MESSAGE);
         }

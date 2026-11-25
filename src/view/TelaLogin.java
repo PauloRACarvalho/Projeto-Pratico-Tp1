@@ -31,8 +31,9 @@ public class TelaLogin extends javax.swing.JFrame {
      * Creates new form TelaLogin
      */
     private GerenciarUsuarios gerenciarUsuarios;
-    private List<Pesquisa> pesquisas;
+    private List<Pesquisa> pesquisas; //ta aqui por que a tela de login é a principal, o programa começa dela
 
+    //construtor para tela ficar visivel
     public TelaLogin(GerenciarUsuarios gerenciarUsuarios) {
 
         this(gerenciarUsuarios, ArquivoPesquisas.carregar());
@@ -41,10 +42,11 @@ public class TelaLogin extends javax.swing.JFrame {
 
     }
 
+    //construtor que tem as coisas funcionando
     public TelaLogin(GerenciarUsuarios gerenciarUsuarios, List<Pesquisa> pesquisas) {
         this.gerenciarUsuarios = gerenciarUsuarios;
-        this.pesquisas = pesquisas == null ? new ArrayList<Pesquisa>() : pesquisas;
-        initComponents();
+        this.pesquisas = pesquisas == null ? new ArrayList<Pesquisa>() : pesquisas; //confere se as pesquisas estao vazias
+        initComponents(); //cria a interface
         
         txtCadastro.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
         txtCadastro.setForeground(java.awt.Color.BLUE);
@@ -239,32 +241,32 @@ public class TelaLogin extends javax.swing.JFrame {
         if (email.equals("Digite seu email") || senha.equals("Digite sua senha")) {
             JOptionPane.showMessageDialog(this, "Preencha email e senha.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
-        }
+        } //verifica se o usuario digitou
 
-        Usuario usuario = gerenciarUsuarios.login(email, senha);
+        Usuario usuario = gerenciarUsuarios.login(email, senha); //instancia o usuario para LOGIN
 
         if (usuario == null) {
             JOptionPane.showMessageDialog(this, "Email ou senha incorretos.", "Erro", JOptionPane.ERROR_MESSAGE);
             txtSenha.setText("");
             txtEmail.requestFocus();
             return;
-        }
+        } //se o usuario nao digitar é null, mostra erro e reconfigura os textos
 
         if (!usuario.isAtivo()) {
             JOptionPane.showMessageDialog(this, "Usuário desativado. Procure um administrador.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
-        }
+        } //verifica se o usuario ta ativo
 
         JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuario.getNome() + "!");
+        //abre a tela principal de acordo com o perfil :)
         if (usuario instanceof Analista) {
             new TelaAnalista(usuario, pesquisas).setVisible(true);
-            this.dispose();
+            this.dispose(); //fecha a tela de login
         } else if (usuario instanceof Administrador) {
             new TelaAdministrador(usuario, gerenciarUsuarios, pesquisas).setVisible(true);
             this.dispose();
         } else if (usuario instanceof Pesquisador) {
-
-            Pesquisador pesquisador = (Pesquisador) usuario;
+            Pesquisador pesquisador = (Pesquisador) usuario; //instancia o pesquisador
             for (Pesquisa pesquisa : pesquisas) {
                 if (!pesquisador.consultarPesquisas().contains(pesquisa)) {
                     pesquisador.cadastrarPesquisa(pesquisa);
