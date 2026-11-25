@@ -40,6 +40,6 @@ build/
 INTEGRACAO_TELAS_ADMIN_PESQUISADOR.txt
 INTEGRACAO_TELA_ANALISTA.txt
 
-src/usuarios.txt
-src/entrevistados.txt
-src/pesquisas.txt
+usuarios.txt
+entrevistados.txt
+pesquisas.txt
