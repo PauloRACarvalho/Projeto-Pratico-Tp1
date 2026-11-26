@@ -57,7 +57,10 @@ public final class OperacoesGUI {
     }
 
     public static void realizarEntrevista(JFrame pai, Usuario usuario, List<Pesquisa> pesquisas) {
-        if (pesquisas.isEmpty()) { aviso(pai, "Cadastre uma pesquisa antes de realizar entrevistas."); return; }
+        if (pesquisas.isEmpty()) {
+            aviso(pai, "Cadastre uma pesquisa antes de realizar entrevistas.");
+            return;
+        }
         Pesquisa pesquisa = (Pesquisa) JOptionPane.showInputDialog(pai, "Selecione a pesquisa:", "Realizar entrevista",
                 JOptionPane.QUESTION_MESSAGE, null, pesquisas.toArray(), pesquisas.get(0));
         if (pesquisa == null) return;
@@ -89,19 +92,35 @@ public final class OperacoesGUI {
             }
             entrevistados.add(entrevista.getEntrevistado());
             ArquivoEntrevistados.salvar(entrevistados);
+            /** quando uma entrevista é realizada ela é adicionada ao dicionário estrevistasPorPesquisa*/
             entrevistasPorPesquisa.computeIfAbsent(pesquisa.getCodigo(), k -> new ArrayList<>()).add(entrevista);
             JOptionPane.showMessageDialog(pai, "Entrevista registrada para a pesquisa " + pesquisa.getCodigo() + ".");
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(pai, "Informe uma idade válida.", "Dados inválidos", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    /** inicializando o método */
     public static void gerarRelatorio(JFrame pai, List<Pesquisa> pesquisas, String titulo) {
-        if (pesquisas.isEmpty()) { aviso(pai, "Não há pesquisas cadastradas para gerar relatório."); return; }
+
+        /** validação inicial,, se não tiver pesquisasm mostra um aviso na tela*/
+        if (pesquisas.isEmpty()) {
+            aviso(pai, "Não há pesquisas cadastradas para gerar relatório.");
+            return;
+        }
+        /** perguntar ao usuário que pesquisa ele quer selecionar,
+         * (Pesquisa) está "forçando" o java a trasnformar o objeto genérico do tipo Object criado por showInputDialog para um objeto do tipo Pesquisa */
         Pesquisa pesquisa = (Pesquisa) JOptionPane.showInputDialog(pai, "Selecione a pesquisa:", titulo,
                 JOptionPane.QUESTION_MESSAGE, null, pesquisas.toArray(), pesquisas.get(0));
+
+        /** para veridicar se o usuário fechou a janela ou cancelou a pesquisa */
         if (pesquisa == null) return;
+
+        /** quando o relatório é gerado, ele busca as entrevistas correspondente ao código da pesquisa escolhida
+         * getOrDefault para evitar um erro de objeto nulo*/
         List<Entrevista> entrevistas = entrevistasPorPesquisa.getOrDefault(pesquisa.getCodigo(), Collections.emptyList());
+
+        /** cabeçalho do relatório */
+        /** o metodo .append() retorna o próprio StringBuilder para encadear vádias chamadas e ficar mais legível */
         StringBuilder relatorio = new StringBuilder("RELATÓRIO DE PESQUISA ELEITORAL\n\n")
                 .append("Código: ").append(pesquisa.getCodigo()).append('\n')
                 .append("Cargo: ").append(pesquisa.getCargo()).append('\n')
@@ -109,25 +128,45 @@ public final class OperacoesGUI {
                 .append("Metodologia: ").append(pesquisa.getMetodologia()).append('\n')
                 .append("Entrevistados previstos: ").append(pesquisa.getQtdeEntrevistados()).append('\n')
                 .append("Entrevistas registradas nesta sessão: ").append(entrevistas.size()).append("\n\nRESULTADOS POR PERGUNTA\n");
-        for (Pergunta pergunta : pesquisa.getPerguntas()) {
+
+        /** laço que se repete uma vez a cada pergunta, percorre cada petgunta da pesquisa */
+        for (Pergunta pergunta : pesquisa.getPerguntas()) { /** tem um, tem muitos, uma pesquisa tem perguntas*/
             relatorio.append("\n").append(pergunta.getEnunciado()).append('\n');
-            int total = 0; Map<Integer, Integer> contagem = new LinkedHashMap<>();
-            for (Entrevista entrevista : entrevistas) for (Resposta resposta : entrevista.getRespostas()) {
-                String[] partes = resposta.getConteudo().split(";", 3);
-                if (partes.length == 3 && Integer.toString(pergunta.getIdentificacao()).equals(partes[0])) {
-                    int idOpcao = Integer.parseInt(partes[1]); contagem.put(idOpcao, contagem.getOrDefault(idOpcao, 0) + 1); total++;
+            int total = 0; /** quantas respostas válidas tem a pergunta */
+            Map<Integer, Integer> contagem = new LinkedHashMap<>(); /** "urna", a opção n (candidato) tem n votos*/
+
+            /** laço para percorrer as respostas das entrevistas*/
+            for (Entrevista entrevista : entrevistas) { /** para cada entrevista que foi feita na pesquisa */
+                for (Resposta resposta : entrevista.getRespostas()) { /** para cada resposta da entrvista */
+                    String[] partes = resposta.getConteudo().split(";", 3); /** quebra o tetxo em 3 partes, pergunta, opção escolhida, descrição da opção*/
+
+                    /** verificação da resposta e contegem dos votos*/
+                    if (partes.length == 3 && Integer.toString(pergunta.getIdentificacao()).equals(partes[0])) { /** se o vetor tem 3 elementos e verifica se a resposta de uma pergunta está sendo contabilizada no loop da pergunta*/
+                        int idOpcao = Integer.parseInt(partes[1]); /** pega o ID da opção escolhida e em texto e transforma para um número inteiro*/
+                        contagem.put(idOpcao, contagem.getOrDefault(idOpcao, 0) + 1); /** pega a contagem de uma opção e atualiza no dicionário contagem*/
+                        total++;
+                    }
                 }
             }
-            for (OpcaoResposta opcao : pergunta.getOpcoes()) {
-                int n = contagem.getOrDefault(opcao.getIdentficacao(), 0);
-                double percentual = total == 0 ? 0 : n * 100.0 / total;
+            /**cálculo da porcentagem*/
+            for (OpcaoResposta opcao : pergunta.getOpcoes()) { /** para cada opção de resposta  da pergunta */
+                int n = contagem.getOrDefault(opcao.getIdentficacao(), 0); /**quantas vezez a opção foi votada*/
+                double percentual = total == 0 ? 0 : n * 100.0 / total; /** se o total de respostas for 0 o percentual será 0, se não calcula a procentagem*/
+                /**formatação*/
                 relatorio.append(" - ").append(opcao.getDescricao()).append(": ").append(n)
                         .append(" ( ").append(String.format(Locale.forLanguageTag("pt-BR"), "%.1f", percentual)).append("% )\n");
             }
             relatorio.append("Total de respostas válidas: ").append(total).append('\n');
         }
-        if (entrevistas.isEmpty()) relatorio.append("\nAinda não há entrevistas registradas para esta pesquisa nesta sessão.\n");
-        JTextArea area = new JTextArea(relatorio.toString(), 22, 65); area.setEditable(false); area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+
+        /** se bão houver entrevistas*/
+        if (entrevistas.isEmpty()) {
+            relatorio.append("\nAinda não há entrevistas registradas para esta pesquisa nesta sessão.\n");
+        }
+        /** para mostrar na tela*/
+        JTextArea area = new JTextArea(relatorio.toString(), 22, 65); /** tamanho da janela */
+        area.setEditable(false);
+        area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JOptionPane.showMessageDialog(pai, new JScrollPane(area), titulo, JOptionPane.INFORMATION_MESSAGE);
         
     }
